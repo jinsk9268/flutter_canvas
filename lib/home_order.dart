@@ -11,8 +11,17 @@ class HomeOrder extends StatefulWidget {
 
 class _HomeOrderState extends State<HomeOrder> {
   final _formKey = GlobalKey<FormState>();
+  final inputController = TextEditingController();
+
   String orderNumber = '';
   bool changeWidget = false;
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    inputController.dispose();
+    super.dispose();
+  }
 
   getSendWeekday(var standardDate) {
     return standardDate.weekday == 1
@@ -86,9 +95,9 @@ class _HomeOrderState extends State<HomeOrder> {
           onPressed: () {
             print('메뉴리스트');
           },
+          color: Colors.black,
         ),
         title: Text('예상 발송일 조회', style: TextStyle(color: Colors.black)),
-        iconTheme: IconThemeData(color: Colors.black),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
@@ -128,7 +137,7 @@ class _HomeOrderState extends State<HomeOrder> {
                                 changeWidget = !changeWidget;
                               });
                             },
-                            color: Colors.black,
+                            color: Color(0xff1D2433),
                             child: Text('뒤로가기',
                                 style: TextStyle(color: Colors.white)),
                           ),
@@ -148,39 +157,32 @@ class _HomeOrderState extends State<HomeOrder> {
                     TextFormField(
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
-                        hintText: '주문번호 19자리를 입력해주세요',
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(12),
-                        border: OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusColor: Colors.black,
-                        // 입력값 삭제 controller로 구현 필요
-                        // suffixIcon: IconButton(
-                        //   icon: Icon(Icons.cancel),
-                        //   onPressed: () {
-                        //     // controller.clear();
-                        //     print('입력');
-                        //   },
-                        //   disabledColor: Colors.grey,
-                        //   color: Colors.grey,
-                        // ),
-                      ),
-                      // 숫자만 입력 가능, length가 19자리를 초과 하면 입력 불가
+                          hintText: '주문번호 19자리를 입력해주세요',
+                          isDense: true,
+                          contentPadding: EdgeInsets.all(12),
+                          border: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.cancel),
+                            iconSize: 20,
+                            onPressed: () {
+                              inputController.clear();
+                            },
+                          )),
+                      controller: inputController,
+                      // 숫자만 입력 가능, length가 19를 초과 하면 입력 불가
                       keyboardType: TextInputType.number,
-                      // controller로 length > 0 이상이면 보이게하기
-                      // maxLength: 19,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                         LengthLimitingTextInputFormatter(19),
                       ],
+                      // maxLength: inputController.text.length > 0 ? 19 : null, // 오류, controller만으로 validation 구현?
+                      maxLength: 19,
                       // 유효성 검사
                       validator: (orderNum) {
-                        if (orderNum.length < 19) {
-                          return '주문번호는 19자리 입니다. 다시 입력해주세요';
-                        }
-                        return null;
+                        return orderNum.length < 19
+                            ? '주문번호는 19자리 입니다. 다시 입력해주세요'
+                            : null;
                       },
                       onSaved: (orderNum) {
                         orderNumber = orderNum;
@@ -206,7 +208,7 @@ class _HomeOrderState extends State<HomeOrder> {
                                 });
                               }
                             },
-                            color: Colors.black,
+                            color: Color(0xff1D2433),
                             child: Text('조회하기',
                                 style: TextStyle(color: Colors.white)),
                           ),

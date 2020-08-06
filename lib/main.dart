@@ -14,12 +14,12 @@ class CanvasMobile extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Canvas',
       theme: ThemeData(
-        // primarySwatch: Colors.blue,
         textTheme: GoogleFonts.robotoTextTheme(
           Theme.of(context).textTheme,
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         cursorColor: Color(0xff1D2433),
+        primaryColor: Color(0xff1D2433),
       ),
       home: HomeOrder(),
     );
