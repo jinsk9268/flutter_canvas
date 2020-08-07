@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import './home_order.dart';
+import './check_order.dart';
+import './check_repair.dart';
 
 void main() {
   runApp(CanvasMobile());
@@ -21,7 +22,8 @@ class CanvasMobile extends StatelessWidget {
         cursorColor: Color(0xff1D2433),
         primaryColor: Color(0xff1D2433),
       ),
-      home: HomeOrder(),
+      home: CheckOrder(),
+      // home: CheckRepair(),
     );
   }
 }

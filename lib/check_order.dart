@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:date_format/date_format.dart';
 
-class HomeOrder extends StatefulWidget {
-  HomeOrder({Key key}) : super(key: key);
+class CheckOrder extends StatefulWidget {
+  CheckOrder({Key key}) : super(key: key);
 
   @override
-  _HomeOrderState createState() => _HomeOrderState();
+  _CheckOrderState createState() => _CheckOrderState();
 }
 
-class _HomeOrderState extends State<HomeOrder> {
+class _CheckOrderState extends State<CheckOrder> {
   final _formKey = GlobalKey<FormState>();
   final inputController = TextEditingController();
 
