@@ -18,7 +18,6 @@ class _CheckOrderState extends State<CheckOrder> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     inputController.dispose();
     super.dispose();
   }

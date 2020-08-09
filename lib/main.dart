@@ -22,8 +22,8 @@ class CanvasMobile extends StatelessWidget {
         cursorColor: Color(0xff1D2433),
         primaryColor: Color(0xff1D2433),
       ),
-      home: CheckOrder(),
-      // home: CheckRepair(),
+      // home: CheckOrder(),
+      home: CheckRepair(),
     );
   }
 }
