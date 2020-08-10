@@ -6,26 +6,62 @@ class CheckRepair extends StatefulWidget {
 }
 
 class _CheckRepairState extends State<CheckRepair> {
-  // repair progress active
+  // 수리 진행상황
   bool repairProgress = true;
   bool repairNotiActive = false;
   bool repairRequestActive = false;
 
-  // check value
+  // 수리 신청 동의
   bool repairAgreement = false;
+
+  // 수리 신청 내용
   bool repairStone = false;
   bool repairColor = false;
   bool repairScratch = false;
   bool repairBreakage = false;
 
-  // input controller
+  // 수리 신청 사용자 입력 controller
   final repairInputController = TextEditingController();
-  // String repairInputValue = '';
+  String repairInputValue = '';
 
   @override
   void dispose() {
     repairInputController.dispose();
     super.dispose();
+  }
+
+  // 신청하기 현재 상황
+  bool repairAccepted = false;
+
+  // 신청 내역 데이터
+  var repairCurrentData = Map();
+  var repairFinalData = Map();
+
+  // 수리 신청 조건 검사 함수
+  repairRequestCheck(bool agreement, var repairContentMap) {
+    var repairSendData = List();
+    for (MapEntry e in repairContentMap.entries) {
+      if (e.value) {
+        repairSendData.add(e.key);
+      }
+    }
+
+    return agreement == true && repairSendData.length > 0
+        ? setState(() {
+            repairAccepted = !repairAccepted;
+            repairProgress = !repairProgress;
+            repairFinalData['repair_agreement'] = repairAgreement;
+            repairFinalData['repair_send_data'] = repairSendData;
+            repairFinalData['repair_input_value'] = repairInputController.text;
+          })
+        : showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('필수 사항이 누락되었습니다.'),
+                content: boldText('유의 사항 동의 및 수리 내용 체크여부를 확인해주세요!'),
+              );
+            });
   }
 
   @override
@@ -75,52 +111,64 @@ class _CheckRepairState extends State<CheckRepair> {
               progressText('신청 완료', !repairProgress),
             ],
           ),
-          SizedBox(height: 20),
-          repairCardTitle('유의 사항', repairNotiActive),
-          repairBorder(),
-          repairNotiActive ? Container() : repairNotiContent(),
-          SizedBox(height: 20),
-          repairCardTitle('수리 신청', repairRequestActive),
-          repairBorder(),
-          repairRequestActive ? Container() : repairRequestContent(),
-          SizedBox(height: 20),
-          repaircheckText('수리 내용', '(중복 선택 가능)'),
-          repairBorder(),
-          repairCheckContent(),
-          SizedBox(height: 20),
+          repairAccepted
+              ? Column(
+                  children: [Container()],
+                )
+              : Column(
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    repairCardTitle('유의 사항', repairNotiActive),
+                    repairBorder(),
+                    repairNotiActive ? Container() : repairNotiContent(),
+                    SizedBox(height: 20),
+                    repairCardTitle('수리 신청', repairRequestActive),
+                    repairBorder(),
+                    repairRequestActive ? Container() : repairRequestContent(),
+                    SizedBox(height: 20),
+                    repaircheckText('수리 내용', '(중복 선택 가능)'),
+                    repairBorder(),
+                    repairCheckContent(),
+                    SizedBox(height: 20),
+                  ],
+                )
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          height: 56,
-          child: RaisedButton(
-            onPressed: () {
-              print('수리 신청');
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '수리 신청하기',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w400,
+      bottomNavigationBar: repairAccepted
+          ? null
+          : BottomAppBar(
+              child: Container(
+                height: 56,
+                child: RaisedButton(
+                  onPressed: () {
+                    repairRequestCheck(repairAgreement, repairCurrentData);
+                    print('수리 신청 사용자 입력 데이터: $repairCurrentData');
+                    print('수리 신청 최종 데이터: $repairFinalData');
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '수리 신청하기',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Icon(
+                        Icons.navigate_next,
+                        color: Colors.white,
+                      )
+                    ],
+                  ),
+                  color: Color(0xff9c6169),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0.0),
                   ),
                 ),
-                Icon(
-                  Icons.navigate_next,
-                  color: Colors.white,
-                )
-              ],
+              ),
             ),
-            color: Color(0xff9c6169),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0.0),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -399,15 +447,19 @@ class _CheckRepairState extends State<CheckRepair> {
               break;
             case '스톤':
               repairStone = !repairStone;
+              repairCurrentData[checkValue] = repairStone;
               break;
             case '변색':
               repairColor = !repairColor;
+              repairCurrentData[checkValue] = repairColor;
               break;
             case '스크래치':
               repairScratch = !repairScratch;
+              repairCurrentData[checkValue] = repairScratch;
               break;
             case '파손':
               repairBreakage = !repairBreakage;
+              repairCurrentData[checkValue] = repairBreakage;
               break;
             default:
               break;
