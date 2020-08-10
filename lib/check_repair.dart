@@ -18,6 +18,16 @@ class _CheckRepairState extends State<CheckRepair> {
   bool repairScratch = false;
   bool repairBreakage = false;
 
+  // input controller
+  final repairInputController = TextEditingController();
+  // String repairInputValue = '';
+
+  @override
+  void dispose() {
+    repairInputController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -330,8 +340,12 @@ class _CheckRepairState extends State<CheckRepair> {
 
   Widget repairInputText() {
     return TextField(
-      textAlignVertical: TextAlignVertical.center,
+      controller: repairInputController,
+      onChanged: (repairText) {
+        print('내용: $repairText');
+      },
       maxLines: 6,
+      textAlignVertical: TextAlignVertical.center,
       style: TextStyle(fontSize: 14),
       decoration: InputDecoration(
         hintText: '구제척인 내용을 적어주세요.',
