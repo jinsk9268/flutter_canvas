@@ -5,6 +5,7 @@ class CheckRepair extends StatefulWidget {
   _CheckRepairState createState() => _CheckRepairState();
 }
 
+// provider 확인해보기
 class _CheckRepairState extends State<CheckRepair> {
   // 수리 진행상황
   bool repairProgress = true;
@@ -113,20 +114,35 @@ class _CheckRepairState extends State<CheckRepair> {
           ),
           repairAccepted
               ? Column(
-                  children: [Container()],
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    repairRequestCheckIcon(),
+                    SizedBox(height: 10),
+                    requestCompletionTitle('수리 신청이 완료되었습니다'),
+                    SizedBox(height: 10),
+                    requestCompletionSubTitle('제품을 포장하신 뒤 3영업일 내에'),
+                    requestCompletionSubTitle('아래 주소로 배송 부탁드립니다.'),
+                    SizedBox(height: 20),
+                    requestCheckBtn(),
+                    SizedBox(height: 20),
+                    repairTitleNoIcon('배송 정보', ''),
+                    repairBorder(),
+                    repairDeliveryInfo(),
+                    SizedBox(height: 20),
+                  ],
                 )
               : Column(
                   children: <Widget>[
                     SizedBox(height: 20),
-                    repairCardTitle('유의 사항', repairNotiActive),
+                    repairTitleDropDown('유의 사항', repairNotiActive),
                     repairBorder(),
                     repairNotiActive ? Container() : repairNotiContent(),
                     SizedBox(height: 20),
-                    repairCardTitle('수리 신청', repairRequestActive),
+                    repairTitleDropDown('수리 신청', repairRequestActive),
                     repairBorder(),
                     repairRequestActive ? Container() : repairRequestContent(),
                     SizedBox(height: 20),
-                    repaircheckText('수리 내용', '(중복 선택 가능)'),
+                    repairTitleNoIcon('수리 내용', '(중복 선택 가능)'),
                     repairBorder(),
                     repairCheckContent(),
                     SizedBox(height: 20),
@@ -172,58 +188,97 @@ class _CheckRepairState extends State<CheckRepair> {
     );
   }
 
-  // Contents Widget
-  Widget progressText(progressTitle, checkColor) {
+  // 신청 완료 Widget
+  Widget repairRequestCheckIcon() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20),
+      child: Icon(
+        Icons.check_circle_outline_sharp,
+        color: Color(0xff9c6169),
+        size: 70,
+      ),
+    );
+  }
+
+  Widget requestCompletionTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1.4,
+      ),
+    );
+  }
+
+  Widget requestCompletionSubTitle(String subTitle) {
+    return Text(
+      subTitle,
+      style: TextStyle(fontSize: 16),
+    );
+  }
+
+  Widget requestCheckBtn() {
+    return FlatButton(
+      onPressed: () {
+        print('수리 신청 내역 로드');
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '수리 신청 내역 확인',
+            style: TextStyle(
+              color: Color(0xff9c6169),
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Icon(
+            Icons.navigate_next,
+            color: Color(0xff9c6169),
+          ),
+        ],
+      ),
+      hoverColor: Color(0xfff0f0f0),
+      highlightColor: Color(0xfff0f0f0),
+    );
+  }
+
+  Widget repairDeliveryInfo() {
+    return Container(
+      padding: EdgeInsets.all(15),
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          boldText('받는 사람'),
+          regularText('주식회사 캔버스컴퍼니 제품 수리 담당자'),
+          SizedBox(height: 15),
+          boldText('연락처'),
+          regularText('02-1234-5678'),
+          SizedBox(height: 15),
+          boldText('주소'),
+          regularText('(04591)'),
+          regularText('서울 중구 다신로 22길 46, 아르텍하우스 2층'),
+          regularText('주식회사 캔버스컴퍼니'),
+          SizedBox(height: 15),
+          boldText('배송요금'),
+          regularText('착불(결제 완료)'),
+          Container(),
+        ],
+      ),
+    );
+  }
+
+  // 신청서 작성 Widget
+  Widget progressText(progressTitle, check) {
     return Text(
       progressTitle,
       style: TextStyle(
         fontSize: 13,
-        fontWeight: FontWeight.w500,
-        color: Color(checkColor ? 0xff323232 : 0xff7e7d7d),
-      ),
-    );
-  }
-
-  Widget repairCardTitle(String title, bool active) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          boldText(title),
-          IconButton(
-            onPressed: () {
-              setState(() {
-                switch (title) {
-                  case '유의 사항':
-                    repairNotiActive = !repairNotiActive;
-                    break;
-                  case '수리 신청':
-                    repairRequestActive = !repairRequestActive;
-                    break;
-                }
-              });
-            },
-            icon: Icon(active ? Icons.expand_more : Icons.expand_less),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget repaircheckText(String title, String subTitle) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      color: Colors.white,
-      child: Row(
-        children: [
-          boldText(title),
-          SizedBox(width: 5),
-          regularText(subTitle),
-        ],
+        fontWeight: check ? FontWeight.bold : FontWeight.w500,
+        color: Color(check ? 0xff323232 : 0xff7e7d7d),
       ),
     );
   }
@@ -246,9 +301,7 @@ class _CheckRepairState extends State<CheckRepair> {
           regularText('왕복 배송료를 신청과 함께 결제하셔야 하며, '
               '수리 비용은 제품 확인 후 별도 안내 드립니다.'),
           SizedBox(height: 10),
-          regularText(
-            '수리를 원하시는 부분을 가능한 구체적으로 아래에 기입 부탁드립니다.',
-          ),
+          regularText('수리를 원하시는 부분을 가능한 구체적으로 아래에 기입 부탁드립니다.'),
           SizedBox(height: 10),
           regularText('감사합니다.'),
           SizedBox(height: 10),
@@ -411,7 +464,7 @@ class _CheckRepairState extends State<CheckRepair> {
     );
   }
 
-  // reuse Widget
+  // 공통 Widget
   Widget repairBorder() {
     return Container(
       padding: EdgeInsets.all(0.0),
@@ -433,6 +486,56 @@ class _CheckRepairState extends State<CheckRepair> {
       style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget repairTitleDropDown(String title, bool active) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.bold),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                switch (title) {
+                  case '유의 사항':
+                    repairNotiActive = !repairNotiActive;
+                    break;
+                  case '수리 신청':
+                    repairRequestActive = !repairRequestActive;
+                    break;
+                }
+              });
+            },
+            icon: Icon(active ? Icons.expand_more : Icons.expand_less),
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget repairTitleNoIcon(String title, String subTitle) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      color: Colors.white,
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 5),
+          regularText(subTitle),
+        ],
       ),
     );
   }
