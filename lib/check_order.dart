@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:date_format/date_format.dart';
 
+import './widget/pageAppBar.dart';
+import './widget/pageDrawer.dart';
+
 class CheckOrder extends StatefulWidget {
   CheckOrder({Key key}) : super(key: key);
 
@@ -10,17 +13,24 @@ class CheckOrder extends StatefulWidget {
 }
 
 class _CheckOrderState extends State<CheckOrder> {
-  final _formKey = GlobalKey<FormState>();
-  final inputController = TextEditingController();
+  // Drawer key
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  openDrawer(key) => key.currentState.openEndDrawer();
 
-  String orderNumber = '';
-  bool changeWidget = false;
+  // textFormField key
+  final _formKey = GlobalKey<FormState>();
+
+  // text input controller
+  final inputController = TextEditingController();
 
   @override
   void dispose() {
     inputController.dispose();
     super.dispose();
   }
+
+  String orderNumber = '';
+  bool changeWidget = false;
 
   getSendWeekday(var standardDate) {
     return standardDate.weekday == 1
@@ -88,18 +98,37 @@ class _CheckOrderState extends State<CheckOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      // appBar: PreferredSize(
+      //   preferredSize: const Size.fromHeight(56),
+      //   child: PageAppBar(title: '예상 발송일 조회'),
+      // ),
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.menu),
           onPressed: () {
-            print('메뉴리스트');
+            print('홈버튼');
           },
-          color: Colors.black,
+          icon: Image.network(
+            'https://canvasrings.com//data/icon/favicon/favicon1538472366.ico',
+            width: 24,
+            height: 24,
+          ),
         ),
         title: Text('예상 발송일 조회', style: TextStyle(color: Colors.black)),
         centerTitle: true,
         backgroundColor: Colors.white,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              print('메뉴리스트');
+              openDrawer(_scaffoldKey);
+            },
+            color: Colors.black,
+          ),
+        ],
       ),
+      endDrawer: PageDrawer(),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         child: Form(

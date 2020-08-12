@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import './widget/pageAppBar.dart';
+import './widget/pageDrawer.dart';
+
 class CheckRepair extends StatefulWidget {
   @override
   _CheckRepairState createState() => _CheckRepairState();
@@ -7,6 +10,10 @@ class CheckRepair extends StatefulWidget {
 
 // provider 확인해보기
 class _CheckRepairState extends State<CheckRepair> {
+  // Drawer key
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  openDrawer(key) => key.currentState.openEndDrawer();
+
   // 수리 진행상황
   bool repairProgress = true;
   bool repairNotiActive = false;
@@ -68,9 +75,12 @@ class _CheckRepairState extends State<CheckRepair> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Color(0xfff0f0f0),
-      // resizeToAvoidBottomInset: true,
-      // resizeToAvoidBottomPadding: false,
+      // appBar: PreferredSize(
+      //   preferredSize: const Size.fromHeight(56),
+      //   child: PageAppBar(title: '수리 신청'),
+      // ),
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -84,17 +94,19 @@ class _CheckRepairState extends State<CheckRepair> {
         ),
         title: Text('수리 신청', style: TextStyle(color: Colors.black)),
         centerTitle: true,
+        backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
-            onPressed: () {
-              print('메뉴 리스트');
-            },
             icon: Icon(Icons.menu),
+            onPressed: () {
+              print('메뉴리스트');
+              openDrawer(_scaffoldKey);
+            },
             color: Colors.black,
-          )
+          ),
         ],
-        backgroundColor: Colors.white,
       ),
+      endDrawer: PageDrawer(),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 15),
         children: [
@@ -122,7 +134,7 @@ class _CheckRepairState extends State<CheckRepair> {
                     SizedBox(height: 10),
                     requestCompletionSubTitle('제품을 포장하신 뒤 3영업일 내에'),
                     requestCompletionSubTitle('아래 주소로 배송 부탁드립니다.'),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     requestCheckBtn(),
                     SizedBox(height: 20),
                     repairTitleNoIcon('배송 정보', ''),
@@ -195,7 +207,7 @@ class _CheckRepairState extends State<CheckRepair> {
       child: Icon(
         Icons.check_circle_outline_sharp,
         color: Color(0xff9c6169),
-        size: 70,
+        size: 65,
       ),
     );
   }
@@ -256,11 +268,11 @@ class _CheckRepairState extends State<CheckRepair> {
           regularText('주식회사 캔버스컴퍼니 제품 수리 담당자'),
           SizedBox(height: 15),
           boldText('연락처'),
-          regularText('02-1234-5678'),
+          regularText('02-2231-1047'),
           SizedBox(height: 15),
           boldText('주소'),
-          regularText('(04591)'),
-          regularText('서울 중구 다신로 22길 46, 아르텍하우스 2층'),
+          regularText('(04539)'),
+          regularText('서울특별시 중구 을지로5길 19, 페럼타워 24층'),
           regularText('주식회사 캔버스컴퍼니'),
           SizedBox(height: 15),
           boldText('배송요금'),
