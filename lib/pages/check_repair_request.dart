@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
 
-import './widget/pageAppBar.dart';
-import './widget/pageDrawer.dart';
-
-class CheckRepair extends StatefulWidget {
+class RepairRequest extends StatefulWidget {
   @override
-  _CheckRepairState createState() => _CheckRepairState();
+  _RepairRequestState createState() => _RepairRequestState();
 }
 
-// provider 확인해보기
-class _CheckRepairState extends State<CheckRepair> {
-  // Drawer key
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  openDrawer(key) => key.currentState.openEndDrawer();
-
+class _RepairRequestState extends State<RepairRequest> {
   // 수리 진행상황
   bool repairProgress = true;
   bool repairNotiActive = false;
@@ -75,38 +67,7 @@ class _CheckRepairState extends State<CheckRepair> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: Color(0xfff0f0f0),
-      // appBar: PreferredSize(
-      //   preferredSize: const Size.fromHeight(56),
-      //   child: PageAppBar(title: '수리 신청'),
-      // ),
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            print('홈버튼');
-          },
-          icon: Image.network(
-            'https://canvasrings.com//data/icon/favicon/favicon1538472366.ico',
-            width: 24,
-            height: 24,
-          ),
-        ),
-        title: Text('수리 신청', style: TextStyle(color: Colors.black)),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              print('메뉴리스트');
-              openDrawer(_scaffoldKey);
-            },
-            color: Colors.black,
-          ),
-        ],
-      ),
-      endDrawer: PageDrawer(),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 15),
         children: [
@@ -205,7 +166,7 @@ class _CheckRepairState extends State<CheckRepair> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Icon(
-        Icons.check_circle_outline_sharp,
+        Icons.check_circle_outline,
         color: Color(0xff9c6169),
         size: 65,
       ),

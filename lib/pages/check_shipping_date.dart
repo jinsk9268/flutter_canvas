@@ -2,21 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:date_format/date_format.dart';
 
-import './widget/pageAppBar.dart';
-import './widget/pageDrawer.dart';
-
-class CheckOrder extends StatefulWidget {
-  CheckOrder({Key key}) : super(key: key);
-
+class EstimatedShippingDate extends StatefulWidget {
   @override
-  _CheckOrderState createState() => _CheckOrderState();
+  _EstimatedShippingDateState createState() => _EstimatedShippingDateState();
 }
 
-class _CheckOrderState extends State<CheckOrder> {
-  // Drawer key
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  openDrawer(key) => key.currentState.openEndDrawer();
-
+class _EstimatedShippingDateState extends State<EstimatedShippingDate> {
   // textFormField key
   final _formKey = GlobalKey<FormState>();
 
@@ -30,7 +21,7 @@ class _CheckOrderState extends State<CheckOrder> {
   }
 
   String orderNumber = '';
-  bool changeWidget = false;
+  bool checkOrderNumber = false;
 
   getSendWeekday(var standardDate) {
     return standardDate.weekday == 1
@@ -98,44 +89,13 @@ class _CheckOrderState extends State<CheckOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      // appBar: PreferredSize(
-      //   preferredSize: const Size.fromHeight(56),
-      //   child: PageAppBar(title: '예상 발송일 조회'),
-      // ),
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            print('홈버튼');
-          },
-          icon: Image.network(
-            'https://canvasrings.com//data/icon/favicon/favicon1538472366.ico',
-            width: 24,
-            height: 24,
-          ),
-        ),
-        title: Text('예상 발송일 조회', style: TextStyle(color: Colors.black)),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              print('메뉴리스트');
-              openDrawer(_scaffoldKey);
-            },
-            color: Colors.black,
-          ),
-        ],
-      ),
-      endDrawer: PageDrawer(),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: changeWidget
+            children: checkOrderNumber
                 ? <Widget>[
                     Text(
                       '고객님의 주문은 아래 날짜에 발송 예정입니다 :',
@@ -162,7 +122,7 @@ class _CheckOrderState extends State<CheckOrder> {
                           child: RaisedButton(
                             onPressed: () {
                               setState(() {
-                                changeWidget = !changeWidget;
+                                checkOrderNumber = !checkOrderNumber;
                               });
                             },
                             color: Color(0xff1D2433),
@@ -177,6 +137,7 @@ class _CheckOrderState extends State<CheckOrder> {
                     Text(
                       '주문번호 조회',
                       style: TextStyle(
+                        height: 1.5,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -185,18 +146,19 @@ class _CheckOrderState extends State<CheckOrder> {
                     TextFormField(
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
-                          hintText: '주문번호 19자리를 입력해주세요',
-                          isDense: true,
-                          contentPadding: EdgeInsets.all(12),
-                          border: OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.cancel),
-                            iconSize: 20,
-                            onPressed: () {
-                              inputController.clear();
-                            },
-                          )),
+                        hintText: '주문번호 19자리를 입력해주세요',
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(12),
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.cancel),
+                          iconSize: 20,
+                          onPressed: () {
+                            inputController.clear();
+                          },
+                        ),
+                      ),
                       controller: inputController,
                       // 숫자만 입력 가능, length가 19를 초과 하면 입력 불가
                       keyboardType: TextInputType.number,
@@ -232,7 +194,7 @@ class _CheckOrderState extends State<CheckOrder> {
                               if (_formKey.currentState.validate()) {
                                 setState(() {
                                   _formKey.currentState.save();
-                                  changeWidget = !changeWidget;
+                                  checkOrderNumber = !checkOrderNumber;
                                 });
                               }
                             },
