@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../model/canvas_bracelet.dart';
+
 class RepairRequest extends StatefulWidget {
+  final List<Bracelet> bracelet;
+  RepairRequest({Key key, @required this.bracelet}) : super(key: key);
+
   @override
   _RepairRequestState createState() => _RepairRequestState();
 }
@@ -13,6 +18,12 @@ class _RepairRequestState extends State<RepairRequest> {
 
   // 수리 신청 동의
   bool repairAgreement = false;
+
+  // 다른 제품 선택하기
+  String selectProductImage = bracelet[0].productImage;
+  String selectProductId = bracelet[0].productId;
+  String selectProductMaterial = bracelet[0].productMaterial;
+  String selectProductPurchaseDate = bracelet[0].productPurchaseDate;
 
   // 수리 신청 내용
   bool repairStone = false;
@@ -53,6 +64,10 @@ class _RepairRequestState extends State<RepairRequest> {
             repairFinalData['repair_agreement'] = repairAgreement;
             repairFinalData['repair_send_data'] = repairSendData;
             repairFinalData['repair_input_value'] = repairInputController.text;
+            repairFinalData['repair_product_id'] = selectProductId;
+            repairFinalData['repair_product_material'] = selectProductMaterial;
+            repairFinalData['repair_product_purchasce_date'] =
+                selectProductPurchaseDate;
           })
         : showDialog(
             context: context,
@@ -61,7 +76,8 @@ class _RepairRequestState extends State<RepairRequest> {
                 title: Text('필수 사항이 누락되었습니다.'),
                 content: boldText('유의 사항 동의 및 수리 내용 체크여부를 확인해주세요!'),
               );
-            });
+            },
+          );
   }
 
   @override
@@ -304,9 +320,7 @@ class _RepairRequestState extends State<RepairRequest> {
             children: [
               Expanded(
                 flex: 1,
-                child: Image.network(
-                  'https://m.canvasrings.com/data/goods/1/2020/04/236_tmp_54594261ed288c7877c48d36d7fda27c7141large.jpg',
-                ),
+                child: Image.network(selectProductImage),
               ),
               SizedBox(width: 15),
               Expanded(
@@ -314,7 +328,7 @@ class _RepairRequestState extends State<RepairRequest> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    boldText('R0093'),
+                    boldText(selectProductId),
                     SizedBox(height: 10),
                     Row(
                       children: [
@@ -323,8 +337,8 @@ class _RepairRequestState extends State<RepairRequest> {
                           child: regularText('소재 :'),
                         ),
                         Expanded(
-                          flex: 3,
-                          child: regularText('화이크골드, 아쿠아 마린'),
+                          flex: 4,
+                          child: regularText(selectProductMaterial),
                         ),
                       ],
                     ),
@@ -335,8 +349,8 @@ class _RepairRequestState extends State<RepairRequest> {
                           child: regularText('구매일 :'),
                         ),
                         Expanded(
-                          flex: 3,
-                          child: regularText('2017년 10월 1일'),
+                          flex: 4,
+                          child: regularText(selectProductPurchaseDate),
                         ),
                       ],
                     ),
@@ -363,13 +377,68 @@ class _RepairRequestState extends State<RepairRequest> {
       child: RaisedButton(
         onPressed: () {
           print('다른 제품 선택하기 모달');
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('제품을 선택해주세요!'),
+                content: productList(),
+              );
+            },
+          );
         },
         color: Color(0xff1D2433),
-        child: Text(btnName,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-            )),
+        child: Text(
+          btnName,
+          style: TextStyle(color: Colors.white, fontSize: 14),
+        ),
+      ),
+    );
+  }
+
+  Widget productList() {
+    return Container(
+      width: double.maxFinite,
+      height: 400,
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: bracelet.length,
+        itemBuilder: (BuildContext context, int index) {
+          var braceletInfo = bracelet[index];
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            child: ListTile(
+              onTap: () {
+                setState(() {
+                  selectProductImage = braceletInfo.productImage;
+                  selectProductId = braceletInfo.productId;
+                  selectProductMaterial = braceletInfo.productMaterial;
+                  selectProductPurchaseDate = braceletInfo.productPurchaseDate;
+                });
+                Navigator.of(context).pop();
+              },
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              hoverColor: Color(0xff9c6169).withOpacity(0.3),
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(braceletInfo.productImage),
+                backgroundColor: Colors.transparent,
+              ),
+              title: Text(braceletInfo.productId),
+              subtitle: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Text('구매일 :'),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(braceletInfo.productPurchaseDate),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

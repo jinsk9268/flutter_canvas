@@ -70,7 +70,7 @@ class _MainHomeState extends State<MainHome> {
       body: currentPageTitle == estimatedShippingDateTitle
           ? EstimatedShippingDate()
           : currentPageTitle == repairRequestTitle
-              ? RepairRequest()
+              ? RepairRequest(bracelet: [])
               : Container(),
     );
   }

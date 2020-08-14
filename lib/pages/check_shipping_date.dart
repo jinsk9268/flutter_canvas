@@ -8,12 +8,9 @@ class EstimatedShippingDate extends StatefulWidget {
 }
 
 class _EstimatedShippingDateState extends State<EstimatedShippingDate> {
-  // textFormField key
   final _formKey = GlobalKey<FormState>();
 
-  // text input controller
   final inputController = TextEditingController();
-
   @override
   void dispose() {
     inputController.dispose();
@@ -69,21 +66,23 @@ class _EstimatedShippingDateState extends State<EstimatedShippingDate> {
     //  상품 발송일
     return orderWeekday == 1 && hour < 10
         ? getSendDate(need4Days)
-        : orderWeekday != 1 &&
-                orderWeekday != 6 &&
-                orderWeekday != 7 &&
-                hour < 10
-            ? getSendDate(need6Days)
+        : orderWeekday == 1 && hour >= 10
+            ? getSendDate(need7Days)
             : orderWeekday != 1 &&
                     orderWeekday != 6 &&
                     orderWeekday != 7 &&
-                    hour >= 10
-                ? getSendDate(need7Days)
-                : orderWeekday == 6
-                    ? getSendDate(need6Days)
-                    : orderWeekday == 7
-                        ? getSendDate(need5Days)
-                        : '주문번호가 존재하지 않습니다.\n주문번호를 다시 확인해주세요!';
+                    hour < 10
+                ? getSendDate(need6Days)
+                : orderWeekday != 1 &&
+                        orderWeekday != 6 &&
+                        orderWeekday != 7 &&
+                        hour >= 10
+                    ? getSendDate(need7Days)
+                    : orderWeekday == 6
+                        ? getSendDate(need6Days)
+                        : orderWeekday == 7
+                            ? getSendDate(need5Days)
+                            : '주문번호가 존재하지 않습니다.\n주문번호를 다시 확인해주세요!';
   }
 
   @override
@@ -97,111 +96,31 @@ class _EstimatedShippingDateState extends State<EstimatedShippingDate> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: checkOrderNumber
                 ? <Widget>[
-                    Text(
-                      '고객님의 주문은 아래 날짜에 발송 예정입니다 :',
-                      style: TextStyle(
-                        height: 1.5,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    shippingDateWidgetTitle('고객님의 주문은 아래 날짜에 발송 예정입니다 :'),
                     SizedBox(height: 15),
-                    Text(
-                      productSendDate(orderNumber),
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    shippingDateText(),
                     SizedBox(height: 15),
                     Row(
                       children: [
                         Spacer(),
                         Container(
                           width: 120,
-                          child: RaisedButton(
-                            onPressed: () {
-                              setState(() {
-                                checkOrderNumber = !checkOrderNumber;
-                              });
-                            },
-                            color: Color(0xff1D2433),
-                            child: Text('뒤로가기',
-                                style: TextStyle(color: Colors.white)),
-                          ),
+                          child: checkShippingDateBtn('뒤로가기'),
                         )
                       ],
                     )
                   ]
                 : <Widget>[
-                    Text(
-                      '주문번호 조회',
-                      style: TextStyle(
-                        height: 1.5,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    shippingDateWidgetTitle('주문번호 조회'),
                     SizedBox(height: 15),
-                    TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        hintText: '주문번호 19자리를 입력해주세요',
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(12),
-                        border: OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.cancel),
-                          iconSize: 20,
-                          onPressed: () {
-                            inputController.clear();
-                          },
-                        ),
-                      ),
-                      controller: inputController,
-                      // 숫자만 입력 가능, length가 19를 초과 하면 입력 불가
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp('[0-9]')),
-                        LengthLimitingTextInputFormatter(19),
-                      ],
-                      // maxLength: inputController.text.length > 0 ? 19 : null, // 오류, controller만으로 validation 구현?
-                      maxLength: 19,
-                      // 유효성 검사
-                      validator: (orderNum) {
-                        return orderNum.length < 19
-                            ? '주문번호는 19자리 입니다. 다시 입력해주세요'
-                            : null;
-                      },
-                      onSaved: (orderNum) {
-                        orderNumber = orderNum;
-                        print('저장되는 주문번호는 $orderNum');
-                        print('orderNumber : $orderNumber');
-                      },
-                      onChanged: (orderNum) {
-                        print('주문번호 : $orderNum');
-                      },
-                    ),
+                    orderNumberInput(),
                     SizedBox(height: 15),
                     Row(
                       children: [
                         Spacer(),
                         Container(
                           width: 120,
-                          child: RaisedButton(
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                setState(() {
-                                  _formKey.currentState.save();
-                                  checkOrderNumber = !checkOrderNumber;
-                                });
-                              }
-                            },
-                            color: Color(0xff1D2433),
-                            child: Text('조회하기',
-                                style: TextStyle(color: Colors.white)),
-                          ),
+                          child: checkShippingDateBtn('조회하기'),
                         )
                       ],
                     )
@@ -209,6 +128,92 @@ class _EstimatedShippingDateState extends State<EstimatedShippingDate> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget shippingDateWidgetTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        height: 1.5,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  Widget shippingDateText() {
+    return Text(
+      productSendDate(orderNumber),
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  Widget orderNumberInput() {
+    return TextFormField(
+      textAlignVertical: TextAlignVertical.center,
+      decoration: InputDecoration(
+        hintText: '주문번호 19자리를 입력해주세요',
+        isDense: true,
+        contentPadding: EdgeInsets.all(12),
+        border: OutlineInputBorder(),
+        focusedBorder: OutlineInputBorder(),
+        suffixIcon: IconButton(
+          icon: Icon(Icons.cancel),
+          iconSize: 20,
+          onPressed: () {
+            inputController.clear();
+          },
+        ),
+      ),
+      controller: inputController,
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+      ],
+      maxLength: 19,
+      validator: (orderNum) {
+        return orderNum.length < 19 ? '주문번호는 19자리 입니다. 다시 입력해주세요' : null;
+      },
+      onSaved: (orderNum) {
+        orderNumber = orderNum;
+        print('저장되는 주문번호는 $orderNum');
+        print('orderNumber : $orderNumber');
+      },
+      onChanged: (orderNum) {
+        print('주문번호 : $orderNum');
+      },
+    );
+  }
+
+  Widget checkShippingDateBtn(String btnTitle) {
+    return RaisedButton(
+      onPressed: () {
+        setState(() {
+          switch (btnTitle) {
+            case '조회하기':
+              if (_formKey.currentState.validate()) {
+                setState(() {
+                  _formKey.currentState.save();
+                  checkOrderNumber = !checkOrderNumber;
+                });
+              }
+              break;
+            case '뒤로가기':
+              setState(() {
+                checkOrderNumber = !checkOrderNumber;
+              });
+              break;
+            default:
+              break;
+          }
+        });
+      },
+      color: Color(0xff1D2433),
+      child: Text(btnTitle, style: TextStyle(color: Colors.white)),
     );
   }
 }
