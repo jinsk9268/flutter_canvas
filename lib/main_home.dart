@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'constant.dart';
 
 import './pages/check_shipping_date.dart';
 import './pages/check_repair_request.dart';
@@ -50,7 +51,7 @@ class _MainHomeState extends State<MainHome> {
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xff9c6169)),
+              decoration: BoxDecoration(color: canvasColor),
               child: Column(
                 children: [
                   Expanded(
@@ -79,7 +80,7 @@ class _MainHomeState extends State<MainHome> {
   Widget drawerMenu(String menuTitle) {
     return ListTile(
       title: Text(menuTitle),
-      hoverColor: Color(0xff9c6169).withOpacity(0.2),
+      hoverColor: canvasColor.withOpacity(0.2),
       onTap: () {
         setState(() {
           currentPageTitle = menuTitle;

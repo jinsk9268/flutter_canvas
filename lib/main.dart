@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'constant.dart';
 
 import './main_home.dart';
 
@@ -18,8 +19,8 @@ class CanvasMobile extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        cursorColor: Color(0xff1D2433),
-        primaryColor: Color(0xff1D2433),
+        cursorColor: brightBlackColor,
+        primaryColor: brightBlackColor,
       ),
       home: MainHome(),
     );

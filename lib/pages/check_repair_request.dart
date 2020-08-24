@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constant.dart';
 
 import '../model/canvas_bracelet.dart';
 
@@ -83,7 +84,7 @@ class _RepairRequestState extends State<RepairRequest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff0f0f0),
+      backgroundColor: bgGreyColor,
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 15),
         children: [
@@ -95,7 +96,7 @@ class _RepairRequestState extends State<RepairRequest> {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 12,
-                color: Color(0xff7e7d7d),
+                color: divisionGreyColor,
               ),
               SizedBox(width: 6),
               progressText('신청 완료', !repairProgress),
@@ -167,7 +168,7 @@ class _RepairRequestState extends State<RepairRequest> {
                       )
                     ],
                   ),
-                  color: Color(0xff9c6169),
+                  color: canvasColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0.0),
                   ),
@@ -183,7 +184,7 @@ class _RepairRequestState extends State<RepairRequest> {
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Icon(
         Icons.check_circle_outline,
-        color: Color(0xff9c6169),
+        color: canvasColor,
         size: 65,
       ),
     );
@@ -218,19 +219,19 @@ class _RepairRequestState extends State<RepairRequest> {
           Text(
             '수리 신청 내역 확인',
             style: TextStyle(
-              color: Color(0xff9c6169),
+              color: canvasColor,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
           Icon(
             Icons.navigate_next,
-            color: Color(0xff9c6169),
+            color: canvasColor,
           ),
         ],
       ),
-      hoverColor: Color(0xfff0f0f0),
-      highlightColor: Color(0xfff0f0f0),
+      hoverColor: bgGreyColor,
+      highlightColor: bgGreyColor,
     );
   }
 
@@ -267,7 +268,7 @@ class _RepairRequestState extends State<RepairRequest> {
       style: TextStyle(
         fontSize: 13,
         fontWeight: check ? FontWeight.bold : FontWeight.w500,
-        color: Color(check ? 0xff323232 : 0xff7e7d7d),
+        color: check ? brightBlackColor : divisionGreyColor,
       ),
     );
   }
@@ -387,7 +388,7 @@ class _RepairRequestState extends State<RepairRequest> {
             },
           );
         },
-        color: Color(0xff1D2433),
+        color: brightBlackColor,
         child: Text(
           btnName,
           style: TextStyle(color: Colors.white, fontSize: 14),
@@ -418,7 +419,7 @@ class _RepairRequestState extends State<RepairRequest> {
                 Navigator.of(context).pop();
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 10),
-              hoverColor: Color(0xff9c6169).withOpacity(0.3),
+              hoverColor: canvasColor.withOpacity(0.3),
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(braceletInfo.productImage),
                 backgroundColor: Colors.transparent,
@@ -469,7 +470,7 @@ class _RepairRequestState extends State<RepairRequest> {
         decoration: BoxDecoration(
           border: Border.all(
             width: 1,
-            color: Color(0xffd6d1d1),
+            color: brightGreyColor,
           ),
         ),
         child: Row(
@@ -496,11 +497,11 @@ class _RepairRequestState extends State<RepairRequest> {
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: const BorderSide(width: 1, color: Color(0xffd6d1d1)),
+          borderSide: const BorderSide(width: 1, color: brightGreyColor),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: const BorderSide(width: 1, color: Color(0xffd6d1d1)),
+          borderSide: const BorderSide(width: 1, color: brightGreyColor),
         ),
       ),
     );
@@ -511,7 +512,7 @@ class _RepairRequestState extends State<RepairRequest> {
     return Container(
       padding: EdgeInsets.all(0.0),
       height: 1.3,
-      color: Color(0xffd6d1d1),
+      color: brightGreyColor,
     );
   }
 
@@ -615,7 +616,7 @@ class _RepairRequestState extends State<RepairRequest> {
       padding: EdgeInsets.zero,
       constraints: BoxConstraints(),
       iconSize: 22,
-      color: isChecked ? Colors.black : Color(0xffd6d1d1),
+      color: isChecked ? Colors.black : brightGreyColor,
     );
   }
 }
